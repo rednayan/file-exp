@@ -1,5 +1,6 @@
 use std::{
-    env, fs,
+    env,
+    fs::{self, Metadata},
     path::{Path, PathBuf},
 };
 
@@ -18,8 +19,10 @@ fn visit_dir(path: &Path) {
         let entry = entry.unwrap();
         let subpath = entry.path();
         if subpath.is_dir() {
+            println!("subpath: {:?}", &subpath);
             visit_dir(&subpath);
         }
-        println!("{:?}", subpath);
+        let metadata: Metadata = fs::metadata(&subpath).unwrap();
+        // println!("{:?}", subpath);
     }
 }
