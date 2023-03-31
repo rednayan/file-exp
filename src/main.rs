@@ -1,4 +1,7 @@
-use std::{env, fs};
+use std::{
+    env, fs,
+    path::{Path, PathBuf},
+};
 
 fn main() {
     let mut arg_vec = Vec::new();
@@ -6,9 +9,17 @@ fn main() {
         arg_vec.push(args);
     }
     let path = String::from(&arg_vec[1]);
+    visit_dir(&PathBuf::from(&path));
+}
 
-    let directories = fs::read_dir(&path).unwrap();
+fn visit_dir(path: &Path) {
+    let directories = fs::read_dir(path).unwrap();
     for entry in directories {
-        println!("{:?}", entry.unwrap());
+        let entry = entry.unwrap();
+        let subpath = entry.path();
+        if subpath.is_dir() {
+            visit_dir(&subpath);
+        }
+        println!("{:?}", subpath);
     }
 }
