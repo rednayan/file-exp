@@ -5,6 +5,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
+#[derive(Debug)]
 struct Config {
     path: String,
 }
@@ -38,5 +39,5 @@ fn get_arguments() -> Result<Config> {
     }
     let path = String::from(&arg_vec[1]);
     let path_config: Config = Config { path };
-    return path_config;
+    Ok(path_config)
 }
