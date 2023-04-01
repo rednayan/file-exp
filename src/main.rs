@@ -5,13 +5,14 @@ use std::{
     path::{Path, PathBuf},
 };
 
+struct Config {
+    path: String,
+}
+
 fn main() -> Result<()> {
-    let mut arg_vec = Vec::new();
-    for args in env::args() {
-        arg_vec.push(args);
-    }
-    let path = String::from(&arg_vec[1]);
-    visit_dir(&PathBuf::from(&path))?;
+    let path_config: Config = get_arguments()?;
+    println!("{:?}", path_config);
+    // visit_dir(&PathBuf::from(&path))?;
     Ok(())
 }
 
@@ -28,4 +29,14 @@ fn visit_dir(path: &Path) -> Result<()> {
         // println!("{:?}", subpath);
     }
     Ok(())
+}
+
+fn get_arguments() -> Result<Config> {
+    let mut arg_vec = Vec::new();
+    for args in env::args() {
+        arg_vec.push(args);
+    }
+    let path = String::from(&arg_vec[1]);
+    let path_config: Config = Config { path };
+    return path_config;
 }
