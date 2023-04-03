@@ -26,10 +26,8 @@ impl PQArray {
     }
 
     pub fn enqueue(&mut self, pq_item: PQItem) {
-        println!("{:?}", &self);
+        &self.p_arr.push(pq_item);
         &self.p_arr.sort_by(|x, y| x.value.cmp(&y.value));
-        self.p_arr.push(pq_item);
-        println!("{:?}", &self);
     }
 
     pub fn peek(&self) -> &PQItem {
