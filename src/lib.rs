@@ -1,4 +1,5 @@
 use anyhow::Result;
+use std::collections::HashMap;
 
 #[derive(Debug, Copy, Ord, Clone, Eq, PartialEq, PartialOrd)]
 pub struct PQItem {
@@ -43,20 +44,21 @@ impl PQArray {
     }
 }
 
-pub fn create_prio_queue() {
-    let pq_item2: PQItem = PQItem::new(4, 5);
-    let pq_item3: PQItem = PQItem::new(10, 15);
-    let pq_item3: PQItem = PQItem::new(10, 16);
-    let pq_item: PQItem = PQItem::new(2, 3);
-    let mut pq_array: PQArray = PQArray::new(pq_item);
-    PQArray::enqueue(&mut pq_array, pq_item3);
-    PQArray::enqueue(&mut pq_array, pq_item2);
-    PQArray::dequeue(&mut pq_array);
-}
-
-pub fn compress(_text_bytes: &Vec<u8>) -> Result<Vec<u8>> {
+pub fn compress(text_bytes: &Vec<u8>) -> Result<Vec<u8>> {
     //do the compression here
-    create_prio_queue();
+    let mut occur_map: HashMap<u8, u8> = HashMap::new();
+
+    for i in text_bytes {
+        match occur_map.get(i) {
+            Some(count) => {
+                occur_map.insert(i.to_owned(), count + 1);
+            }
+            None => {
+                occur_map.insert(i.to_owned(), 1);
+            }
+        }
+    }
+
     let compressed_vec: Vec<u8> = Vec::new();
     Ok(compressed_vec)
 }
