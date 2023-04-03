@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Ord, Clone, Eq, PartialEq, PartialOrd)]
 pub struct PQItem {
     pub value: u32,
     pub priority: u32,
@@ -28,17 +28,30 @@ impl PQArray {
         self.p_arr.push(pq_item);
     }
 
-    // pub fn peek(&self) -> PQItem {
+    pub fn peek(&self) -> &PQItem {
+        let high_prio = self
+            .p_arr
+            .iter()
+            .max_by(|x, y| x.priority.cmp(&y.priority))
+            .unwrap();
+        high_prio
+    }
 
-    // }
+    pub fn dequeue(&mut self) -> &Self {
+        &self.p_arr.sort_by(|x, y| x.priority.cmp(&y.priority));
+        self
+    }
 }
 
 pub fn create_prio_queue() {
-    let pq_item: PQItem = PQItem::new(2, 3);
     let pq_item2: PQItem = PQItem::new(4, 5);
+    let pq_item3: PQItem = PQItem::new(10, 15);
+    let pq_item3: PQItem = PQItem::new(10, 16);
+    let pq_item: PQItem = PQItem::new(2, 3);
     let mut pq_array: PQArray = PQArray::new(pq_item);
+    PQArray::enqueue(&mut pq_array, pq_item3);
     PQArray::enqueue(&mut pq_array, pq_item2);
-    println!("{:?}", &pq_array);
+    PQArray::dequeue(&mut pq_array);
 }
 
 pub fn compress(_text_bytes: &Vec<u8>) -> Result<Vec<u8>> {
