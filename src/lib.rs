@@ -27,20 +27,20 @@ impl PQArray {
 
     pub fn enqueue(&mut self, pq_item: PQItem) {
         &self.p_arr.push(pq_item);
-        &self.p_arr.sort_by(|x, y| x.value.cmp(&y.value));
+        &self.p_arr.sort_by(|x, y| y.value.cmp(&x.value));
     }
 
     pub fn peek(&self) -> &PQItem {
-        let high_prio = self
+        let min_prio = self
             .p_arr
             .iter()
-            .max_by(|x, y| x.priority.cmp(&y.priority))
+            .min_by(|x, y| x.priority.cmp(&y.priority))
             .unwrap();
-        high_prio
+        min_prio
     }
 
     pub fn dequeue(&mut self) {
-        &self.p_arr.sort_by(|x, y| x.priority.cmp(&y.priority));
+        // &self.p_arr.sort_by(|x, y| x.priority.cmp(&y.priority));
         &self.p_arr.pop();
     }
 }
@@ -65,13 +65,17 @@ pub fn compress(text_bytes: &Vec<u8>) -> Result<Vec<u8>> {
         value: 0,
         priority: 0,
     });
+    pq_array.dequeue();
 
     for (k, v) in occur_map {
         let pq_item: PQItem = PQItem::new(v, k);
         pq_array.enqueue(pq_item);
     }
+    // let min = pq_array.peek();
+
+    // pq_array.dequeue();
     for i in pq_array.p_arr {
-        println!("{}:{}", i.value, i.priority);
+        println!("{:?}:{:?}", i.value, i.priority);
     }
 
     let compressed_vec: Vec<u8> = Vec::new();
