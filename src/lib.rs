@@ -37,9 +37,9 @@ impl PQArray {
         high_prio
     }
 
-    pub fn dequeue(&mut self) -> &Self {
+    pub fn dequeue(&mut self) {
         &self.p_arr.sort_by(|x, y| x.priority.cmp(&y.priority));
-        self
+        &self.p_arr.pop();
     }
 }
 
