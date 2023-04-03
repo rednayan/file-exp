@@ -1,4 +1,5 @@
 use anyhow::Result;
+use file_exp::compress;
 use std::{
     env, fs,
     path::{Path, PathBuf},
@@ -34,7 +35,7 @@ fn visit_dir(path: &Path) -> Result<()> {
             visit_dir(&subpath)?;
         }
         let file_bytes = fs::read(&subpath)?;
-        println!("{:?}", file_bytes);
+        compress(&file_bytes)?;
     }
     Ok(())
 }
