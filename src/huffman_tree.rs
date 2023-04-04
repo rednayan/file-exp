@@ -1,3 +1,4 @@
+use bit_vec::BitVec;
 use std::{
     cmp::Reverse,
     collections::{BinaryHeap, HashMap},
@@ -45,6 +46,30 @@ impl Tree {
             Leaf { .. } => None,
         }
     }
+
+    pub fn to_encoder(&self) -> HashMap<u8, BitVec> {
+        let mut encoder = HashMap::new();
+
+        let mut stack = vec![(self, BitVec::new())];
+        while !stack.is_empty() {
+            let (node, path) = stack.pop().unwrap();
+            match node {
+                Leaf { text_byte, .. } => {
+                    encoder.insert(text_byte.clone(), path.clone());
+                }
+                Node { left, right, .. } => {
+                    let mut left_path = path.clone();
+                    left_path.push(false);
+                    stack.push((left, left_path));
+
+                    let mut right_path = path.clone();
+                    right_path.push(true);
+                    stack.push((right, right_path));
+                }
+            }
+        }
+        encoder
+    }
 }
 
 impl Ord for Tree {
@@ -77,5 +102,6 @@ pub fn huffman_tree(freqs: &HashMap<u8, u8>) -> Tree {
         };
         heap.push(Reverse(merged_node))
     }
+    println!("{:?}", &heap);
     heap.pop().unwrap().0
 }

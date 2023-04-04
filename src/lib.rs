@@ -49,7 +49,6 @@ impl PQArray {
 pub fn compress(text_bytes: &Vec<u8>) -> Result<Vec<u8>> {
     //do the compression here
     let mut occur_map: HashMap<u8, u8> = HashMap::new();
-    println!("{:?}", &text_bytes);
 
     for i in text_bytes {
         match occur_map.get(i) {
@@ -61,9 +60,10 @@ pub fn compress(text_bytes: &Vec<u8>) -> Result<Vec<u8>> {
             }
         }
     }
-
-    println!("{:?}", occur_map);
-
+    let tree = huffman_tree::huffman_tree(&occur_map);
+    println!("{:?}", &tree);
+    let encode = tree.to_encoder();
+    println!("{:?}", encode);
     // let mut pq_array: PQArray = PQArray::new(PQItem {
     //     value: 0,
     //     priority: 0,
