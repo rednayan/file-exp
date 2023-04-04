@@ -28,7 +28,7 @@ impl PQArray {
 
     pub fn enqueue(&mut self, pq_item: PQItem) {
         &self.p_arr.push(pq_item);
-        &self.p_arr.sort_by(|x, y| x.value.cmp(&y.value));
+        &self.p_arr.sort_by(|x, y| y.value.cmp(&x.value));
     }
 
     pub fn peek(&self) -> &PQItem {
@@ -40,9 +40,10 @@ impl PQArray {
         min_prio
     }
 
-    pub fn dequeue(&mut self) {
+    pub fn dequeue(&mut self) -> Option<PQItem> {
         // &self.p_arr.sort_by(|x, y| x.priority.cmp(&y.priority));
-        &self.p_arr.pop();
+        let item = &self.p_arr.pop();
+        item.clone()
     }
 }
 
@@ -60,22 +61,22 @@ pub fn compress(text_bytes: &Vec<u8>) -> Result<Vec<u8>> {
             }
         }
     }
-    let tree = huffman_tree::huffman_tree(&occur_map);
-    println!("{:?}", &tree);
-    let encode = tree.to_encoder();
-    println!("{:?}", encode);
-    // let mut pq_array: PQArray = PQArray::new(PQItem {
-    //     value: 0,
-    //     priority: 0,
-    // });
-    // pq_array.dequeue();
+    // let tree = huffman_tree::huffman_tree(&occur_map);
+    // let encode = tree.to_encoder();
+    let mut pq_array: PQArray = PQArray::new(PQItem {
+        value: 0,
+        priority: 0,
+    });
+    pq_array.dequeue();
 
-    // for (k, v) in occur_map {
-    //     let pq_item: PQItem = PQItem::new(v, k);
-    //     pq_array.enqueue(pq_item);
-    // }
+    for (k, v) in occur_map {
+        let pq_item: PQItem = PQItem::new(v, k);
+        pq_array.enqueue(pq_item);
+    }
+
+    huffman_tree::huffman_tree(&mut pq_array);
+
     // let min = pq_array.peek();
-
     // pq_array.dequeue();
     // for i in pq_array.p_arr {
     //     println!("{:?}:{:?}", i.value, i.priority);
