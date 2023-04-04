@@ -62,22 +62,24 @@ pub fn compress(text_bytes: &Vec<u8>) -> Result<Vec<u8>> {
         }
     }
 
-    let mut pq_array: PQArray = PQArray::new(PQItem {
-        value: 0,
-        priority: 0,
-    });
-    pq_array.dequeue();
+    println!("{:?}", occur_map);
 
-    for (k, v) in occur_map {
-        let pq_item: PQItem = PQItem::new(v, k);
-        pq_array.enqueue(pq_item);
-    }
+    // let mut pq_array: PQArray = PQArray::new(PQItem {
+    //     value: 0,
+    //     priority: 0,
+    // });
+    // pq_array.dequeue();
+
+    // for (k, v) in occur_map {
+    //     let pq_item: PQItem = PQItem::new(v, k);
+    //     pq_array.enqueue(pq_item);
+    // }
     // let min = pq_array.peek();
 
     // pq_array.dequeue();
-    for i in pq_array.p_arr {
-        println!("{:?}:{:?}", i.value, i.priority);
-    }
+    // for i in pq_array.p_arr {
+    //     println!("{:?}:{:?}", i.value, i.priority);
+    // }
 
     let compressed_vec: Vec<u8> = Vec::new();
     Ok(compressed_vec)

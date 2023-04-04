@@ -1,3 +1,8 @@
+use std::{
+    cmp::Reverse,
+    collections::{BinaryHeap, HashMap},
+};
+
 use Tree::*;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -52,4 +57,25 @@ impl PartialOrd for Tree {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         Some(self.cmp(other))
     }
+}
+
+pub fn huffman_tree(freqs: &HashMap<u8, u8>) -> Tree {
+    let mut heap = BinaryHeap::new();
+    for (text_byte, freq) in freqs {
+        let (text_byte, freq) = (text_byte.clone(), *freq);
+        heap.push(Reverse(Leaf { freq, text_byte }))
+    }
+
+    while heap.len() > 1 {
+        let node1 = heap.pop().unwrap().0;
+        let node2 = heap.pop().unwrap().0;
+
+        let merged_node = Node {
+            freq: node1.freq() + node2.freq(),
+            left: Box::new(node1),
+            right: Box::new(node2),
+        };
+        heap.push(Reverse(merged_node))
+    }
+    heap.pop().unwrap().0
 }
