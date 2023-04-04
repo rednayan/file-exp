@@ -1,3 +1,4 @@
+pub mod huffman_tree;
 use anyhow::Result;
 use std::collections::HashMap;
 
@@ -27,7 +28,7 @@ impl PQArray {
 
     pub fn enqueue(&mut self, pq_item: PQItem) {
         &self.p_arr.push(pq_item);
-        &self.p_arr.sort_by(|x, y| y.value.cmp(&x.value));
+        &self.p_arr.sort_by(|x, y| x.value.cmp(&y.value));
     }
 
     pub fn peek(&self) -> &PQItem {
