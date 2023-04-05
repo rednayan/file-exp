@@ -1,5 +1,6 @@
 pub mod huffman_tree;
 use anyhow::Result;
+use bit_vec::BitVec;
 use std::collections::HashMap;
 
 #[derive(Debug, Copy, Ord, Clone, Eq, PartialEq, PartialOrd)]
@@ -47,7 +48,7 @@ impl PQArray {
     }
 }
 
-pub fn compress(text_bytes: &Vec<u8>) -> Result<Vec<u8>> {
+pub fn compress(text_bytes: &Vec<u8>) -> Result<Vec<BitVec>> {
     //do the compression here
     let mut occur_map: HashMap<u8, u8> = HashMap::new();
 
@@ -61,27 +62,36 @@ pub fn compress(text_bytes: &Vec<u8>) -> Result<Vec<u8>> {
             }
         }
     }
-    // let tree = huffman_tree::huffman_tree(&occur_map);
-    // let encode = tree.to_encoder();
-    let mut pq_array: PQArray = PQArray::new(PQItem {
-        value: 0,
-        priority: 0,
-    });
-    pq_array.dequeue();
+    let tree = huffman_tree::huffman_tree(&occur_map);
+    let encode = tree.to_encoder();
+    println!("{:?}", tree);
 
-    for (k, v) in occur_map {
-        let pq_item: PQItem = PQItem::new(v, k);
-        pq_array.enqueue(pq_item);
-    }
+    // let mut pq_array: PQArray = PQArray::new(PQItem {
+    //     value: 0,
+    //     priority: 0,
+    // });
+    // pq_array.dequeue();
 
-    huffman_tree::huffman_tree(&mut pq_array);
+    // for (k, v) in occur_map {
+    //     let pq_item: PQItem = PQItem::new(v, k);
+    //     pq_array.enqueue(pq_item);
+    // }
+
+    // huffman_tree::huffman_tree(&mut pq_array);
 
     // let min = pq_array.peek();
     // pq_array.dequeue();
     // for i in pq_array.p_arr {
     //     println!("{:?}:{:?}", i.value, i.priority);
     // }
+    let mut compressed_vec: Vec<BitVec> = Vec::new();
 
-    let compressed_vec: Vec<u8> = Vec::new();
+    for i in text_bytes {
+        for (v, l) in &encode {
+            if i == v {
+                compressed_vec.push(l.clone());
+            }
+        }
+    }
     Ok(compressed_vec)
 }

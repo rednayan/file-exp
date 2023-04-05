@@ -35,7 +35,8 @@ fn visit_dir(path: &Path) -> Result<()> {
             visit_dir(&subpath)?;
         }
         let file_bytes = fs::read(&subpath)?;
-        compress(&file_bytes)?;
+        let compressed_bytes = compress(&file_bytes)?;
+        println!("{:?}", compressed_bytes);
     }
     Ok(())
 }

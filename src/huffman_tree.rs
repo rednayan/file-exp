@@ -85,58 +85,56 @@ impl PartialOrd for Tree {
     }
 }
 
-// pub fn huffman_tree(freqs: &HashMap<u8, u8>) -> Tree {
-//     let mut heap = BinaryHeap::new();
-//     for (text_byte, freq) in freqs {
-//         let (text_byte, freq) = (text_byte.clone(), *freq);
-//         heap.push(Reverse(Leaf { freq, text_byte }))
-//     }
-
-//     while heap.len() > 1 {
-//         let node1 = heap.pop().unwrap().0;
-//         let node2 = heap.pop().unwrap().0;
-
-//         let merged_node = Node {
-//             freq: node1.freq() + node2.freq(),
-//             left: Box::new(node1),
-//             right: Box::new(node2),
-//         };
-//         heap.push(Reverse(merged_node))
-//     }
-//     heap.pop().unwrap().0
-// }
-
-pub fn huffman_tree(freqs: &mut PQArray) {
+pub fn huffman_tree(freqs: &HashMap<u8, u8>) -> Tree {
     let mut heap = BinaryHeap::new();
-    while freqs.p_arr.len() >= 1 {
-        let node1 = match freqs.dequeue() {
-            Some(pq_item) => pq_item,
-            None => PQItem {
-                value: 0,
-                priority: 0,
-            },
-        };
+    for (text_byte, freq) in freqs {
+        let (text_byte, freq) = (text_byte.clone(), *freq);
+        heap.push(Reverse(Leaf { freq, text_byte }))
+    }
 
-        let node2 = match freqs.dequeue() {
-            Some(pq_item) => pq_item,
-            None => PQItem {
-                value: 0,
-                priority: 0,
-            },
-        };
+    while heap.len() > 1 {
+        let node1 = heap.pop().unwrap().0;
+        let node2 = heap.pop().unwrap().0;
 
         let merged_node = Node {
-            freq: node1.value + node2.value,
-            left: Box::new(Leaf {
-                freq: node1.value,
-                text_byte: node1.priority,
-            }),
-            right: Box::new(Leaf {
-                freq: node2.value,
-                text_byte: node2.priority,
-            }),
+            freq: node1.freq() + node2.freq(),
+            left: Box::new(node1),
+            right: Box::new(node2),
         };
-        heap.push(merged_node);
+        heap.push(Reverse(merged_node))
     }
-    println!("{:?}", heap);
+    heap.pop().unwrap().0
 }
+
+// pub fn huffman_tree(freqs: &mut PQArray) {
+//     while freqs.p_arr.len() > 1 {
+//         let node1 = match freqs.dequeue() {
+//             Some(pq_item) => pq_item,
+//             None => PQItem {
+//                 value: 0,
+//                 priority: 0,
+//             },
+//         };
+
+//         let node2 = match freqs.dequeue() {
+//             Some(pq_item) => pq_item,
+//             None => PQItem {
+//                 value: freqs.p_arr[0].value.clone(),
+//                 priority: freqs.p_arr[0].priority.clone(),
+//             },
+//         };
+
+//         let merged_node = Node {
+//             freq: node1.value + node2.value,
+//             left: Box::new(Leaf {
+//                 freq: node1.value,
+//                 text_byte: node1.priority,
+//             }),
+//             right: Box::new(Leaf {
+//                 freq: node2.value,
+//                 text_byte: node2.priority,
+//             }),
+//         };
+//     }
+//     println!("{:?}", &freqs.dequeue());
+// }
