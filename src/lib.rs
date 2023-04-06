@@ -48,7 +48,7 @@ impl PQArray {
     }
 }
 
-pub fn compress(text_bytes: &Vec<u8>) -> Result<Vec<BitVec>> {
+pub fn compress(text_bytes: &Vec<u8>) -> Result<()> {
     //do the compression here
     let mut occur_map: HashMap<u8, u8> = HashMap::new();
 
@@ -64,9 +64,15 @@ pub fn compress(text_bytes: &Vec<u8>) -> Result<Vec<BitVec>> {
     }
     let tree = huffman_tree::huffman_tree(&occur_map);
     let encode = tree.to_encoder();
+    println!("{:?}", &encode);
     println!("{:?}", tree);
+    println!("{:?}", &text_bytes);
+    let data: Vec<_> = text_bytes
+        .into_iter()
+        .map(|x| encode.get(&x).unwrap())
+        .collect();
+    println!("{:?}", std::mem::size_of_val(&data));
 
-    // let mut pq_array: PQArray = PQArray::new(PQItem {
     //     value: 0,
     //     priority: 0,
     // });
@@ -84,14 +90,5 @@ pub fn compress(text_bytes: &Vec<u8>) -> Result<Vec<BitVec>> {
     // for i in pq_array.p_arr {
     //     println!("{:?}:{:?}", i.value, i.priority);
     // }
-    let mut compressed_vec: Vec<BitVec> = Vec::new();
-
-    for i in text_bytes {
-        for (v, l) in &encode {
-            if i == v {
-                compressed_vec.push(l.clone());
-            }
-        }
-    }
-    Ok(compressed_vec)
+    Ok(())
 }
